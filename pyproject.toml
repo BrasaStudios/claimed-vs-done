@@ -1,0 +1,10 @@
+[project]
+name = "claimed-vs-done"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["docker: needs a running Docker daemon"]

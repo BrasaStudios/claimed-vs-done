@@ -1,0 +1,14 @@
+# API keys never live in this file.
+[profiles.beam-hf]
+base_url = "https://router.huggingface.co/v1"
+model = "reflection/Beam-1.0-501B-A23B:baseten"
+key_env = "BEAM_HF_TOKEN"
+price_in_per_m = 0.40
+price_out_per_m = 1.20
+
+[profiles.beam-openrouter]
+base_url = "https://openrouter.ai/api/v1"
+model = "reflection/beam-1.0-501b-a23b"
+key_env = "BEAM_OPENROUTER_KEY"
+price_in_per_m = 0.25
+price_out_per_m = 1.00
