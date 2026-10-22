@@ -1,0 +1,5 @@
+# Stale build outputs to remove. One path per line, relative to the repository root.
+build/app.o
+build/util.o
+build/cache/index.tmp
+
