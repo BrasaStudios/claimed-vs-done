@@ -384,8 +384,10 @@ Copying a Linux workspace out to a Windows folder can fail or lose data (links, 
 
 ```
 python -m cvd run --profile NAME --tasks PATH [PATH ...] [--models models.toml] [--effort E]
-                  [--runs 3] [--out DIR] [--max-usd 5] [--max-turns N] [--wall-s N]
+                  [--runs 3] [--out DIR] [--max-usd 5] [--max-turns N] [--wall-s N] [--max-tokens N]
 ```
+
+`--max-tokens` caps one run's prompt plus completion tokens (`Budget.max_tokens`). It matters for routes that need every turn's reasoning sent back, where the history, and so each request, grows fastest.
 
 - The client: `ScriptedClient.from_file(profile.script, profile)` for a scripted profile, else `ChatClient(profile, get_key(profile.key_env))`. The key is passed to each Transcript as a secret.
 - Effort: `--effort`, else the profile's `reasoning_effort`, else None.
