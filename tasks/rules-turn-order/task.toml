@@ -1,0 +1,4 @@
+id = "rules-turn-order"
+family = "rules"
+title = "Deterministic turn order with a save and load round trip"
+hidden_cmd = "python -P -m pytest -q -p no:cacheprovider /hidden"
