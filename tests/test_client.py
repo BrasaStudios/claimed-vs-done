@@ -295,3 +295,50 @@ def test_invalid_200_exhaustion_redacts_secret(mock_api, fake_key):
     assert caught.value.status == 200
     assert fake_key not in str(caught.value) and fake_key not in caught.value.body
     assert "[REDACTED]" in caught.value.body
+
+
+@pytest.mark.parametrize("content", [None, "", "answer"])
+def test_assistant_message_content_and_no_calls(content):
+    from cvd.client import assistant_message
+
+    reply = ScriptedClient([{"content": content}]).complete([])
+    assert assistant_message(reply) == {"role": "assistant", "content": content or ""}
+
+
+def test_assistant_message_preserves_raw_tool_arguments():
+    from cvd.client import assistant_message
+
+    raw = ' { "path" : "calc/core.py" } '
+    reply = ScriptedClient([{"tool_calls": [
+        {"name": "read_file", "arguments": raw},
+        {"name": "write_file", "arguments": "{broken"},
+    ]}]).complete([])
+    message = assistant_message(reply)
+    assert message == {
+        "role": "assistant", "content": "", "tool_calls": [
+            {"id": "call_1", "type": "function", "function": {"name": "read_file", "arguments": raw}},
+            {"id": "call_2", "type": "function", "function": {"name": "write_file", "arguments": "{broken"}},
+        ],
+    }
+
+
+@pytest.mark.parametrize("echo", [None, "", "reasoning_content", "reasoning"])
+@pytest.mark.parametrize("reasoning", [None, "", "Inspect first."])
+def test_assistant_message_reasoning_only_when_configured(echo, reasoning):
+    from cvd.client import assistant_message
+
+    reply = ScriptedClient([{"reasoning_content": reasoning}]).complete([])
+    expected = {"role": "assistant", "content": ""}
+    if echo and reasoning is not None:
+        expected[echo] = reasoning
+    assert assistant_message(reply, echo) == expected
+
+
+def test_profiles_load_reasoning_echo_for_beam():
+    from pathlib import Path
+    from cvd.config import load_profiles
+
+    profiles = load_profiles(Path(__file__).resolve().parents[1] / "models.toml")
+    assert profiles["beam-hf"].reasoning_echo == "reasoning_content"
+    assert profiles["beam-openrouter"].reasoning_echo is None
+    assert Profile("default").reasoning_echo is None

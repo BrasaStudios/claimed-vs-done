@@ -267,3 +267,38 @@ def test_cli_help(capsys):
         cli.main(["probe", "--help"])
     assert caught.value.code == 0
     assert "usage: cvd probe" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("echo", ["reasoning_content", None])
+def test_route_requires_reasoning_on_assistant_history(mock_api, fake_key, echo):
+    from cvd.client import ApiError
+
+    reasoning = "I should use add for these two numbers."
+    base_handler = route_handler()
+
+    def handler(request):
+        messages = request["body"]["messages"]
+        assistants = [message for message in messages if message["role"] == "assistant"]
+        if any(message.get("reasoning_content") != reasoning for message in assistants):
+            return 400, {}, {"error": "The assistant turn is missing reasoning_content"}
+        status, headers, body = base_handler(request)
+        if request["body"].get("tools") and not assistants:
+            body["choices"][0]["message"]["reasoning_content"] = reasoning
+        return status, headers, body
+
+    mock_api(handler=handler)
+    profile = Profile(
+        "requires-reasoning", base_url=mock_api.base_url, model="local-model",
+        key_env="CVD_TEST_KEY", reasoning_echo=echo, timeout_s=3,
+    )
+    client = ChatClient(profile, fake_key, max_retries=0)
+    if echo is None:
+        with pytest.raises(ApiError) as caught:
+            probe(client, profile, samples=1)
+        assert caught.value.status == 400
+    else:
+        result = probe(client, profile, samples=1)
+        assert result["tool_round_trip"] == "pass" and result["calls"] == 4
+        assistant = mock_api.requests[1]["body"]["messages"][1]
+        assert assistant["reasoning_content"] == reasoning
+        assert assistant["tool_calls"][0]["function"]["name"] == "add"

@@ -21,6 +21,7 @@ class Profile:
     max_tokens: int | None = None
     temperature: float | None = None
     script: str | None = None
+    reasoning_echo: str | None = None
 
 
 class KeyMissing(Exception):

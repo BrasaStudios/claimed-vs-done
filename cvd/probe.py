@@ -4,7 +4,7 @@ import statistics
 import time
 from decimal import Decimal, InvalidOperation
 
-from .client import ApiError
+from .client import ApiError, assistant_message
 from .config import cost_usd
 
 _ADD_TOOL = {
@@ -126,18 +126,7 @@ def probe(client, profile, efforts=("low", "high"), samples=2, max_usd=0.05) -> 
         elif not any(_correct_arguments(call) for call in add_calls):
             result["tool_round_trip"] = "bad_arguments"
         else:
-            messages.append({
-                "role": "assistant",
-                "content": first.content or "",
-                "tool_calls": [
-                    {
-                        "id": call.id,
-                        "type": "function",
-                        "function": {"name": call.name, "arguments": call.arguments_raw},
-                    }
-                    for call in first.tool_calls
-                ],
-            })
+            messages.append(assistant_message(first, profile.reasoning_echo))
             for call in first.tool_calls:
                 messages.append({
                     "role": "tool",

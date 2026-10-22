@@ -42,6 +42,22 @@ class ChatResponse:
     retries: int
 
 
+def assistant_message(reply: ChatResponse, reasoning_echo: str | None = None) -> dict:
+    message = {"role": "assistant", "content": reply.content or ""}
+    if reply.tool_calls:
+        message["tool_calls"] = [
+            {
+                "id": call.id,
+                "type": "function",
+                "function": {"name": call.name, "arguments": call.arguments_raw},
+            }
+            for call in reply.tool_calls
+        ]
+    if reasoning_echo and reply.reasoning is not None:
+        message[reasoning_echo] = reply.reasoning
+    return message
+
+
 class ApiError(Exception):
     def __init__(self, status: int | None, body: str):
         self.status = status

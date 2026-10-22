@@ -3,6 +3,7 @@
 base_url = "https://router.huggingface.co/v1"
 model = "reflection/Beam-1.0-501B-A23B:baseten"
 key_env = "BEAM_HF_TOKEN"
+reasoning_echo = "reasoning_content"
 price_in_per_m = 0.40
 price_out_per_m = 1.20
 
