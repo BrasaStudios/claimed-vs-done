@@ -263,7 +263,9 @@ class Sandbox:
     def diff_outside_work(self) -> list[str]:
         entries = []
         for line in _docker(["diff", self.name]).splitlines():
-            if len(line) < 3 or line[0] not in "ACD":
+            # "<A|C|D> /path" only: a file name containing a newline splits
+            # into extra lines that must not read as changes elsewhere.
+            if not re.match(r"[ACD] /", line):
                 continue
             path = line[2:]
             if any(path == prefix or path.startswith(prefix + "/") for prefix in ("/work", *NOISE)):
