@@ -317,9 +317,13 @@ def test_assistant_message_preserves_raw_tool_arguments():
     assert message == {
         "role": "assistant", "content": "", "tool_calls": [
             {"id": "call_1", "type": "function", "function": {"name": "read_file", "arguments": raw}},
-            {"id": "call_2", "type": "function", "function": {"name": "write_file", "arguments": "{broken"}},
+            # Unparseable arguments are sent back as {}: Beam's route refused a
+            # whole history over one such call (2026-10-22). The raw text stays
+            # on the ToolCall for the transcript.
+            {"id": "call_2", "type": "function", "function": {"name": "write_file", "arguments": "{}"}},
         ],
     }
+    assert reply.tool_calls[1].arguments_raw == "{broken"
 
 
 @pytest.mark.parametrize("echo", [None, "", "reasoning_content", "reasoning"])

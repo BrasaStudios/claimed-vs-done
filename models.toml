@@ -7,12 +7,60 @@ reasoning_echo = "reasoning_content"
 price_in_per_m = 0.40
 price_out_per_m = 1.20
 
+# Beam with its reasoning NOT sent back, through the route's own opt-out, to
+# measure the degradation the route warns about ("Dropping reasoning from
+# earlier turns degrades this model's output"). Not for the main results.
+[profiles.beam-hf-noecho]
+base_url = "https://router.huggingface.co/v1"
+model = "reflection/Beam-1.0-501B-A23B:baseten"
+key_env = "BEAM_HF_TOKEN"
+# The flag only works inside chat_template_kwargs (checked 2026-10-22): placed
+# at the top level, as the route's error message words it, it is refused.
+extra_body = { chat_template_kwargs = { allow_missing_thinking = true } }
+price_in_per_m = 0.40
+price_out_per_m = 1.20
+
 [profiles.beam-openrouter]
 base_url = "https://openrouter.ai/api/v1"
 model = "reflection/beam-1.0-501b-a23b"
 key_env = "BEAM_OPENROUTER_KEY"
 price_in_per_m = 0.25
 price_out_per_m = 1.00
+
+# Rival candidates (router listing 2026-10-22). Three are served by Baseten,
+# Beam's own provider, so a comparison does not mix in a provider difference.
+# Each must pass a multi-turn run before it counts as a peer.
+[profiles.rival-deepseek-v41f-bt]
+base_url = "https://router.huggingface.co/v1"
+model = "deepseek-ai/DeepSeek-V4.1-Flash:baseten"
+key_env = "BEAM_HF_TOKEN"
+price_in_per_m = 0.30
+price_out_per_m = 1.20
+
+[profiles.rival-glm53f-bt]
+base_url = "https://router.huggingface.co/v1"
+model = "zai-org/GLM-5.3-Flash:baseten"
+key_env = "BEAM_HF_TOKEN"
+price_in_per_m = 0.15
+price_out_per_m = 0.50
+
+# Not usable (2026-10-22): without the echo its tool calls leak into its
+# reasoning from turn two; with the echo it makes no tool call at all. Same
+# leak on deepinfra (oss-hf). Kept for the record, not as a peer.
+[profiles.rival-oss120-bt]
+base_url = "https://router.huggingface.co/v1"
+model = "openai/gpt-oss-120b:baseten"
+key_env = "BEAM_HF_TOKEN"
+reasoning_echo = "reasoning_content"
+price_in_per_m = 0.10
+price_out_per_m = 0.50
+
+[profiles.rival-kimi26-di]
+base_url = "https://router.huggingface.co/v1"
+model = "moonshotai/Kimi-K2.6:deepinfra"
+key_env = "BEAM_HF_TOKEN"
+price_in_per_m = 0.75
+price_out_per_m = 3.50
 
 # A near-free route, tried for dry runs (router listing 2026-10-22). Not usable
 # for agent work: from its second turn on, its tool calls arrive inside the

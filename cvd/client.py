@@ -49,7 +49,13 @@ def assistant_message(reply: ChatResponse, reasoning_echo: str | None = None) ->
             {
                 "id": call.id,
                 "type": "function",
-                "function": {"name": call.name, "arguments": call.arguments_raw},
+                # Unparseable arguments go back as {}: a route that validates
+                # the history (Beam on Baseten does) would refuse the whole
+                # request. The transcript keeps the raw text.
+                "function": {
+                    "name": call.name,
+                    "arguments": call.arguments_raw if call.arguments is not None else "{}",
+                },
             }
             for call in reply.tool_calls
         ]
