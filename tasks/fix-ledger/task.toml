@@ -1,0 +1,4 @@
+id = "fix-ledger"
+family = "fix"
+title = "Fix negative amounts in a ledger package and add a budget check"
+hidden_cmd = "python /hidden/hidden_check.py /work"
