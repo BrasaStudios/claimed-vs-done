@@ -20,7 +20,7 @@ pytestmark = [pytest.mark.docker, pytest.mark.skipif(not docker_available(), rea
 
 def containers():
     result = subprocess.run(
-        ["docker", "ps", "-a", "--filter", "name=cvd-", "--format", "{{.Names}}"],
+        ["docker", "ps", "-a", "--filter", "name=cvdtest-", "--format", "{{.Names}}"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=20, check=True,
     )
     return set(result.stdout.decode("ascii").splitlines())

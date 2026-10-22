@@ -11,6 +11,11 @@ from pathlib import Path
 
 import pytest
 
+# Test containers get their own prefix, and every test helper lists and removes
+# only these, so the suite can run beside a live benchmark batch (a cleanup
+# fixture once deleted a live run's container). Child processes inherit it.
+os.environ["CVD_SANDBOX_PREFIX"] = "cvdtest-"
+
 
 @pytest.fixture
 def tmp_path():

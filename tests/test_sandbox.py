@@ -35,7 +35,7 @@ def docker(*args):
 
 def test_network_off_and_container_limits(sandbox):
     info = json.loads(docker("inspect", sandbox.name).stdout)[0]
-    assert re.fullmatch(r"cvd-[0-9a-f]{12}", sandbox.name)
+    assert re.fullmatch(r"cvdtest-[0-9a-f]{12}", sandbox.name)
     assert info["Config"]["Image"] == IMAGE
     assert info["HostConfig"]["NetworkMode"] == "none"
     assert info["HostConfig"]["Memory"] == 2 * 1024 ** 3
