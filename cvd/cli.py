@@ -249,8 +249,20 @@ def _run_batch(args):
     return 0
 
 
+def _grade_arguments(parser):
+    parser.add_argument("batches", nargs="+", type=Path)
+    parser.add_argument("--tasks", nargs="+", default=["tasks"])
+
+
+def _run_grade(args):
+    from .grade import grade_batches
+
+    return grade_batches(args.batches, args.tasks)
+
+
 # Later runs register their argument builder and handler in this table.
 _COMMANDS = {
+    "grade": ("Grade finished runs from their files.", _grade_arguments, _run_grade),
     "run": ("Run a model on tasks and save grading artifacts.", _run_arguments, _run_batch),
     "probe": ("Probe a model route's tools, effort dial, and usage.", _probe_arguments, _run_probe),
     "verify-tasks": ("Verify task baselines and reference solutions.", _verify_arguments, _run_verify_tasks),

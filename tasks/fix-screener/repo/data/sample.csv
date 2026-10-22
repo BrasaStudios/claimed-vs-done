@@ -1,0 +1,11 @@
+ticker,sector,price,volatility
+QZ01,Technology,152.40,0.31
+QZ02,Energy,48.10,0.42
+QZ03,Health,3.20,0.55
+QZ04,Utilities,61.75,0.12
+QZ05,technology,9.80,0.71
+QZ06,Materials,,0.28
+QZ07,Energy,27.35,0.19
+QZ08,Health,88.00,0.64
+QZ09,Utilities,4.50,0.09
+QZ10,Technology,210.00,0.22
