@@ -232,7 +232,7 @@ class FileState:
 @dataclass
 class Snapshot:
     files: dict[str, FileState]   # path relative to /work, forward slashes
-    commits: int                  # git rev-list --all --count in /work
+    commits: int                  # git rev-list --count --branches HEAD in /work (not --all: git stash adds two commits under refs/stash)
 
 class SandboxError(Exception): ...
 def docker_available() -> bool    # `docker info` exits 0 within 20 s

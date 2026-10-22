@@ -50,6 +50,14 @@ def test_network_off_and_container_limits(sandbox):
     assert "no-new-privileges" in info["HostConfig"]["SecurityOpt"]
 
 
+def test_commit_count_ignores_stash_but_sees_commits(sandbox):
+    assert sandbox.snapshot().commits == 1
+    sandbox.exec("echo more >> calc/core.py && git stash -q")
+    assert sandbox.snapshot().commits == 1
+    sandbox.exec("git stash pop -q && git commit -qam work")
+    assert sandbox.snapshot().commits == 2
+
+
 def test_snapshot_survives_links_and_unreadable_files(sandbox):
     sandbox.exec("ln -s /etc/shadow shadow_link && ln -s calc dir_link")
     sandbox.exec("echo secret > locked.txt && chmod 000 locked.txt")
