@@ -1,0 +1,4 @@
+id = "sample_task"
+family = "fix"
+title = "Fix the arithmetic mean"
+hidden_cmd = "python -m pytest -q -p no:cacheprovider /hidden"
