@@ -39,7 +39,7 @@ seed = 7
 
 def test_supplied_model_routes():
     profiles = load_profiles(Path(__file__).resolve().parents[1] / "models.toml")
-    assert set(profiles) == {"beam-hf", "beam-openrouter"}
+    assert {"beam-hf", "beam-openrouter", "scripted-sample"} <= set(profiles)
     hf = profiles["beam-hf"]
     assert (hf.base_url, hf.model, hf.key_env) == (
         "https://router.huggingface.co/v1",

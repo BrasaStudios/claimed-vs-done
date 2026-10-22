@@ -13,3 +13,15 @@ model = "reflection/beam-1.0-501b-a23b"
 key_env = "BEAM_OPENROUTER_KEY"
 price_in_per_m = 0.25
 price_out_per_m = 1.00
+
+# A near-free route for dry runs of the whole pipeline (router listing 2026-10-22).
+[profiles.oss-hf]
+base_url = "https://router.huggingface.co/v1"
+model = "openai/gpt-oss-120b:deepinfra"
+key_env = "BEAM_HF_TOKEN"
+price_in_per_m = 0.04
+price_out_per_m = 0.17
+
+[profiles.scripted-sample]
+kind = "scripted"
+script = "tests/data/sample_script.json"
