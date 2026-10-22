@@ -14,7 +14,10 @@ key_env = "BEAM_OPENROUTER_KEY"
 price_in_per_m = 0.25
 price_out_per_m = 1.00
 
-# A near-free route for dry runs of the whole pipeline (router listing 2026-10-22).
+# A near-free route, tried for dry runs (router listing 2026-10-22). Not usable
+# for agent work: from its second turn on, its tool calls arrive inside the
+# reasoning text with no tool call, with or without the reasoning echoed back
+# (both field names tried, 2026-10-22). Try another provider before using it.
 [profiles.oss-hf]
 base_url = "https://router.huggingface.co/v1"
 model = "openai/gpt-oss-120b:deepinfra"
