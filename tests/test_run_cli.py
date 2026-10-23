@@ -213,6 +213,17 @@ def test_task_budget_and_effort_precedence(tmp_path, override):
     assert str(header["budget"]["max_turns"]) in header["system_prompt"]
 
 
+def test_system_prompt_option(tmp_path):
+    prompt = tmp_path / "variant.md"
+    prompt.write_text("Variant: {max_turns} turns, {wall_minutes} minutes.\n",
+                      encoding="ascii", newline="\n")
+    out = tmp_path / "batch"
+    result = run_cli(out, "--system-prompt", str(prompt), "--max-turns", "40", "--wall-s", "120")
+    assert result.returncode == 0, result.stdout
+    header = read_transcript(out / "sample_task-r1/transcript.jsonl")[0]
+    assert header["system_prompt"] == "Variant: 40 turns, 2 minutes.\n"
+
+
 @pytest.mark.parametrize("status, code", [(401, 3), (403, 3), (402, 4)])
 def test_fatal_api_writes_artifacts_and_stops(tmp_path, mock_api, fake_key, monkeypatch, status, code):
     monkeypatch.setenv("CVD_RUN_TEST_KEY", fake_key)

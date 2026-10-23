@@ -389,7 +389,10 @@ Copying a Linux workspace out to a Windows folder can fail or lose data (links, 
 ```
 python -m cvd run --profile NAME --tasks PATH [PATH ...] [--models models.toml] [--effort E]
                   [--runs 3] [--out DIR] [--max-usd 5] [--max-turns N] [--wall-s N] [--max-tokens N]
+                  [--system-prompt PATH]
 ```
+
+`--system-prompt` (added 2026-10-23 for the instruction experiment) reads the prompt template from PATH instead of `prompts/system.md`. `build_system_prompt` fills `{max_turns}` and `{wall_minutes}` as before, and the filled text is in each transcript's header, so every run records the prompt it got. Give each prompt its own `--out` folder: a resumed batch does not check that earlier runs used the same prompt.
 
 `--max-tokens` caps one run's prompt plus completion tokens (`Budget.max_tokens`). It matters for routes that need every turn's reasoning sent back, where the history, and so each request, grows fastest.
 

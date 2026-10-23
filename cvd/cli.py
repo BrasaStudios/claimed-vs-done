@@ -134,6 +134,7 @@ def _run_arguments(parser):
     parser.add_argument("--max-turns", type=_positive_int)
     parser.add_argument("--wall-s", type=_positive_int)
     parser.add_argument("--max-tokens", type=_positive_int)
+    parser.add_argument("--system-prompt", type=Path)
 
 
 class _RunClient:
@@ -178,9 +179,10 @@ def _run_batch(args):
         datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + profile.name
         + "-" + (effort or "default")
     )
-    template = (Path(__file__).resolve().parents[1] / "prompts" / "system.md").read_text(
-        encoding="utf-8"
+    prompt_path = args.system_prompt or (
+        Path(__file__).resolve().parents[1] / "prompts" / "system.md"
     )
+    template = prompt_path.read_text(encoding="utf-8")
     for task in tasks:
         for number in range(1, args.runs + 1):
             run_id = f"{task.id}-r{number}"
