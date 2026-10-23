@@ -42,6 +42,7 @@ def main() -> int:
     (out / MARKER).write_text("generated; safe to delete\n", encoding="ascii")
     shutil.copy2(ROOT / "docs" / "DATASET_CARD.md", out / "README.md")
     shutil.copy2(ROOT / "docs" / "FINDINGS.md", out / "FINDINGS.md")
+    shutil.copy2(ROOT / "docs" / "honesty-chart.png", out / "honesty-chart.png")
     shutil.copytree(ROOT / "prompts", out / "prompts", ignore=IGNORE)
     shutil.copytree(ROOT / "tasks", out / "tasks", ignore=IGNORE)
 
