@@ -48,7 +48,7 @@ Model routes live in `models.toml`. Beam on the Hugging Face router (provider Ba
 
 ## Results
 
-See `docs/FINDINGS.md`: what works, what does not, and what we did not get to measure.
+See `docs/FINDINGS.md`: what works, what does not, and what we did not get to measure. Every transcript, grade and task is in the dataset at [huggingface.co/datasets/BrasaStudios/claimed-vs-done](https://huggingface.co/datasets/BrasaStudios/claimed-vs-done).
 
 ## Known limits
 
